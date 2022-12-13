@@ -12,6 +12,11 @@ load_dotenv()
 # py -m pip install Pillow
 # py -m pip install sqlite3
 # py -m pip install aiosqlite
+# py -m pip install aiohttp
+# py -m pip install praw
+# py -m pip install async praw
+# py -m pip install urllib
+
 
 
 
