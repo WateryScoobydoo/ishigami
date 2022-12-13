@@ -4,7 +4,7 @@
 ---
 **10th January, 2018 - Present**
 
-Ishigami began development in early 2018, but was paused due to the priority development focus of Sinon-chan a month later. Redevelopment resumed in late 2020 after the discontinuation of The Asian Squad server, however was paused again due to Discord's new terms and services. Redevelopment was resumed in late 2022, following the release of Hayasaka, and replaces previous test bot, Velvet Scarlatina. 
+​Ishigami began development in early 2018, but was paused due to the priority development focus of Sinon-chan a month later. Redevelopment resumed in late 2020 after the discontinuation of The Asian Squad server, however was paused again due to Discord's new terms and services. Redevelopment was resumed in late 2022, following the release of Hayasaka, and replaces previous test bot, Velvet Scarlatina. Testing modules include database management, slash commands and AI generated image creation.
 
 ---
 
