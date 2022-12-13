@@ -1,10 +1,14 @@
 from nextcord import Interaction, SlashOption, ChannelType
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
-import nextcord
+import nextcord, aiosqlite
 import os
 from dotenv import load_dotenv
 load_dotenv()
+# py -m pip install module
+
+
+
 
 
 #SETUP
@@ -13,6 +17,35 @@ bot = commands.Bot(command_prefix="!", intents = nextcord.Intents.all())
 @bot.event
 async def on_ready():
         print("Ishigami is online!")
+        async with aiosqlite.connect("main.db") as db:
+            async with db.cursor() as cursor:
+                await cursor.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER , guild INTEGER)')
+            await db.commit()
+
+#DB CMDS
+@bot.command()
+async def adduser(ctx, member:nextcord.Member):
+    member = ctx.author
+    async with aiosqlite.connect("main.db") as db:
+        async with db.cursor() as cursor:
+            await cursor.execute('SELECT id FROM users WHERE guild = ?', (ctx.guild.id))
+            data = await cursor.fetchone()
+            if data:
+                await cursor.execute('UPDATE users SET id = ? WHERE guild = ?', (member.id, ctx.guild.id))
+            else:
+                await cursor.execute('INSERT INTO users (id, guild) VALUES (?, ?)', (member.id, ctx.guild.id))
+        await db.commit()
+
+@bot.command()
+async def removeuser(ctx, member:nextcord.Member):
+    member = ctx.author
+    async with aiosqlite.connect("main.db") as db:
+        async with db.cursor() as cursor:
+            await cursor.execute('SELECT id FROM users WHERE guild = ?', (ctx.guild.id))
+            data = await cursor.fetchone()
+            if data:
+                await cursor.execute('DELETE FROM users WHERE id = ? AND guild = ?', (member.id, ctx.guild.id))
+        await db.commit()
 
 
 #COMMANDS
