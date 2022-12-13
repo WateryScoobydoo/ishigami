@@ -15,7 +15,6 @@ load_dotenv()
 # py -m pip install aiohttp
 # py -m pip install praw
 # py -m pip install async praw
-# py -m pip install urllib
 
 
 
@@ -28,6 +27,7 @@ bot = commands.Bot(command_prefix="!", intents = nextcord.Intents.all())
 
 warning = ":exclamation:**WARNING: EXPERIMENTAL COMMAND**:exclamation:"
 
+#AI IMAGE SETUP
 class DropDown(nextcord.ui.Select):
     def __init__(self, message, images, user):
         self.message = message
@@ -106,7 +106,7 @@ async def removeuser(ctx, member:nextcord.Member):
         await db.commit()
 
 
-#AI IMAGE
+#AI IMAGE CMDS
 @bot.command()
 async def gen(ctx: commands.Context, *, prompt: str):
     await ctx.send(warning)
@@ -124,7 +124,9 @@ async def test(ctx):
     await ctx.send(warning)
     await ctx.send("Ishigami is working as intended! :white_check_mark:")
 
+#add meme command here
 
+#SLASH CMDS
 @bot.slash_command(name="test", description="Check command")
 async def test(interaction : Interaction):
     await interaction.send("Ishigami's slash command working as intended!", ephemeral=False)
