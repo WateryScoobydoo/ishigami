@@ -7,7 +7,12 @@ from PIL import Image
 from io import BytesIO
 from dotenv import load_dotenv
 load_dotenv()
-# py -m pip install module
+# py -m pip install nextcord
+# py -m pip install craiyon.py
+# py -m pip install Pillow
+# py -m pip install sqlite3
+# py -m pip install aiosqlite
+
 
 
 
@@ -15,6 +20,8 @@ load_dotenv()
 
 #SETUP
 bot = commands.Bot(command_prefix="!", intents = nextcord.Intents.all())
+
+warning = ":exclamation:**WARNING: EXPERIMENTAL COMMAND**:exclamation:"
 
 class DropDown(nextcord.ui.Select):
     def __init__(self, message, images, user):
@@ -69,6 +76,7 @@ async def on_ready():
 #DB CMDS
 @bot.command()
 async def adduser(ctx, member:nextcord.Member):
+    await ctx.send(warning)
     member = ctx.author
     async with aiosqlite.connect("main.db") as db:
         async with db.cursor() as cursor:
@@ -82,6 +90,7 @@ async def adduser(ctx, member:nextcord.Member):
 
 @bot.command()
 async def removeuser(ctx, member:nextcord.Member):
+    await ctx.send(warning)
     member = ctx.author
     async with aiosqlite.connect("main.db") as db:
         async with db.cursor() as cursor:
@@ -95,6 +104,7 @@ async def removeuser(ctx, member:nextcord.Member):
 #AI IMAGE
 @bot.command()
 async def gen(ctx: commands.Context, *, prompt: str):
+    await ctx.send(warning)
     ETA = int(time.time() + 60)
     msg = await ctx.send(f"Please wait while I process your image, ETA: <t:{ETA}:R>")
     async with aiohttp.request("POST", "https://backend.craiyon.com/generate", json={"prompt": prompt}) as resp:
@@ -106,7 +116,8 @@ async def gen(ctx: commands.Context, *, prompt: str):
 #COMMANDS
 @bot.command()
 async def test(ctx):
-    await ctx.send("Ishigami is working as intended!")
+    await ctx.send(warning)
+    await ctx.send("Ishigami is working as intended! :white_check_mark:")
 
 
 @bot.slash_command(name="test", description="Check command")
