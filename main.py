@@ -8,6 +8,7 @@ from io import BytesIO
 from dotenv import load_dotenv
 load_dotenv()
 # py -m pip install nextcord
+# py -m pip install python-dotenv
 # py -m pip install craiyon.py
 # py -m pip install Pillow
 # py -m pip install sqlite3
