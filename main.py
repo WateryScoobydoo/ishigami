@@ -148,9 +148,13 @@ async def meme(ctx):
 async def test(interaction : Interaction):
     await interaction.send("Ishigami's slash command working as intended!", ephemeral=False)
 
-@bot.slash_command(name="yes", description="Ping pong")
+@bot.slash_command(name="yes", description="WateryScoobydoo only!")
 async def yes(interaction : Interaction):
     await interaction.send("https://discord.com/developers/active-developer", ephemeral=True)
+
+@bot.slash_command(name="ping", description="Ping pong")
+async def ping(interaction : Interaction):
+    await interaction.response.send_message(f"{interaction.user.mention} Pong", ephemeral=False)
 
 @bot.slash_command(name="say", description="Type here to send a message!")
 async def say(interaction : Interaction, message:str):
