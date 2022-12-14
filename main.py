@@ -1,4 +1,4 @@
-import nextcord, aiosqlite, time, base64, os, aiohttp
+import nextcord, aiosqlite, time, base64, os, aiohttp, asyncio, json, urllib.request, random
 from nextcord import Interaction, SlashOption, ChannelType
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
@@ -124,7 +124,22 @@ async def test(ctx):
     await ctx.send(warning)
     await ctx.send("Ishigami is working as intended! :white_check_mark:")
 
-#add meme command here
+#MEME CMDS
+@bot.command()
+async def meme(ctx):
+    await ctx.send(warning)
+    fakeChrome = urllib.request.Request('https://meme-api.com/gimme', headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'})
+    memeApi = urllib.request.urlopen(fakeChrome)
+    memeData = json.load(memeApi)
+    memeLink = memeData['postLink']
+    memeSub = memeData['subreddit']
+    memeTitle = memeData['title']
+    memeUrl = memeData['url']
+    memeAuthor = memeData['author']
+    embed = nextcord.Embed(title=memeTitle)
+    embed.set_image(url=memeUrl)
+    embed.set_footer(text=f"Meme by: {memeAuthor} | Subreddit: {memeSub} | Post: {memeLink}")
+    await ctx.send(embed=embed)
 
 #SLASH CMDS
 @bot.slash_command(name="test", description="Check command")
