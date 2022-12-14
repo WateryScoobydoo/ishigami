@@ -15,6 +15,7 @@ load_dotenv()
 # py -m pip install aiohttp
 # py -m pip install praw
 # py -m pip install async praw
+# py -m pip install urllib3
 
 
 
