@@ -150,7 +150,7 @@ async def test(interaction : Interaction):
 
 @bot.slash_command(name="yes", description="WateryScoobydoo only!")
 async def yes(interaction : Interaction):
-    await interaction.send("https://discord.com/developers/active-developer", ephemeral=True)
+    await interaction.send("https://discord.com/developers/active-developer :white_check_mark:", ephemeral=True)
 
 @bot.slash_command(name="ping", description="Ping pong")
 async def ping(interaction : Interaction):
