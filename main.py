@@ -154,10 +154,12 @@ async def yes(interaction : Interaction):
 
 @bot.slash_command(name="ping", description="Ping pong")
 async def ping(interaction : Interaction):
-    await interaction.response.send_message(f"{interaction.user.mention} Pong", ephemeral=False)
+    botPing = round(bot.latency*100) 
+    await interaction.response.send_message(f"{interaction.user.mention} Pong - {botPing}ms!", ephemeral=False)
 
 @bot.slash_command(name="say", description="Type here to send a message!")
 async def say(interaction : Interaction, message:str):
     await interaction.response.send_message(f"Quote: '{message}'")
+
 
 bot.run(os.getenv("TOKEN"))
