@@ -161,5 +161,14 @@ async def ping(interaction : Interaction):
 async def say(interaction : Interaction, message:str):
     await interaction.response.send_message(f"Quote: '{message}'")
 
+@bot.slash_command(name="f1", description="Roll for your Formula 1 driver")
+async def f1(interaction : Interaction):
+    f1drivers = [
+        '#1 | Max VERSTAPPEN', '#11 | Sergio PEREZ', '#16 | Charles LECLERC', '#55 | Carlos SAINZ', '#44 | Lewis HAMILTON', 
+        '#63 | George RUSSELL', '#10 | Pierre GASLY', '#31 | Esteban OCON', '#4 | Lando NORRIS', '#81 | Oscar PIASTRI', 
+        '#24 | Guanyu ZHOU', '#77 | Valtteri BOTTAS', '#14 | Fernando ALONSO', '#18 | Lance STROLL', '#20 | Kevin MAGNUSSEN', 
+        '#27 | Nico HULKENBERG', '#22 | Yuki TSUNODA', '#TBC | Nyck DE VRIES', '#23 | Alex ALBON', '#TBC | Logan SARGEANT'
+    ]
+    await interaction.response.send_message(f"Your choosen driver is: **{random.choice(f1drivers)}**", ephemeral=False)
 
 bot.run(os.getenv("TOKEN"))
