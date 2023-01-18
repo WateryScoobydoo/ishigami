@@ -1,10 +1,11 @@
-import nextcord, aiosqlite, time, base64, os, aiohttp, asyncio, json, urllib.request, random
+import nextcord, aiosqlite, time, base64, os, aiohttp, asyncio, json, urllib.request, random, aiohttp
 from nextcord import Interaction, SlashOption, ChannelType
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
 from craiyon import Craiyon
 from PIL import Image
 from io import BytesIO
+from config import API
 from dotenv import load_dotenv
 load_dotenv()
 # py -m pip install nextcord
@@ -17,6 +18,7 @@ load_dotenv()
 # py -m pip install praw
 # py -m pip install async praw
 # py -m pip install urllib3
+# py -m pip install aiohttp
 
 
 
@@ -142,6 +144,28 @@ async def meme(ctx):
     embed.set_image(url=memeUrl)
     embed.set_footer(text=f"Meme by: {memeAuthor} | Subreddit: {memeSub} | Post: {memeLink}")
     await ctx.send(embed=embed)
+
+#CHAT GPT
+@bot.command()
+async def ask(ctx: commands.Context, *, prompt: str):
+    async with aiohttp.ClientSession() as session:
+        payload = {
+            "model": "text-ada-001",
+            #"model": "text-babbage-001",
+            #"model": "text-curie-001",
+            #"model": "text-davinci-003",
+            "prompt": prompt,
+            "temperature": 0.5,
+            "max_tokens": 50,
+            "presence_penalty": 0,
+            "frequency_penalty": 0,
+            "best_of": 1
+        }
+        headers = {"Authorization": f"Bearer {API}"}
+        async with session.post("https://api.openai.com/v1/completions", json=payload, headers=headers) as resp:
+            response = await resp.json()
+            embed = nextcord.Embed(title="Hayasaka says:", description=response["choices"][0]["text"])
+            await ctx.reply(embed=embed)
 
 #SLASH CMDS
 @bot.slash_command(name="test", description="Check command")
