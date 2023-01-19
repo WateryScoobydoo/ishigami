@@ -184,7 +184,7 @@ async def ping(interaction : Interaction):
 
 @bot.slash_command(name="say", description="Type here to send a message!")
 async def say(interaction : Interaction, message:str):
-    await interaction.response.send_message(f"Quote: '{message}'")
+    await interaction.response.send_message(f"**{interaction.user.mention} says:** {message}")
 
 @bot.slash_command(name="f1", description="Roll for your Formula 1 driver")
 async def f1(interaction : Interaction):
