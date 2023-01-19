@@ -1,4 +1,4 @@
-import nextcord, aiosqlite, time, base64, os, aiohttp, asyncio, json, urllib.request, random, aiohttp
+import nextcord, aiosqlite, time, base64, os, aiohttp, asyncio, json, urllib.request, random
 from nextcord import Interaction, SlashOption, ChannelType
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
@@ -165,6 +165,7 @@ async def ask(ctx: commands.Context, *, prompt: str):
         async with session.post("https://api.openai.com/v1/completions", json=payload, headers=headers) as resp:
             response = await resp.json()
             embed = nextcord.Embed(title="Hayasaka says:", description=response["choices"][0]["text"])
+            await ctx.reply(warning)
             await ctx.reply(embed=embed)
 
 #SLASH CMDS
@@ -178,7 +179,7 @@ async def yes(interaction : Interaction):
 
 @bot.slash_command(name="ping", description="Ping pong")
 async def ping(interaction : Interaction):
-    botPing = round(bot.latency*100) 
+    botPing = round(bot.latency*1000) 
     await interaction.response.send_message(f"{interaction.user.mention} Pong - {botPing}ms!", ephemeral=False)
 
 @bot.slash_command(name="say", description="Type here to send a message!")
