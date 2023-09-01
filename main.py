@@ -19,6 +19,7 @@ load_dotenv()
 # py -m pip install async praw
 # py -m pip install urllib3
 # py -m pip install aiohttp
+# py -m pip install requests
 
 
 
@@ -32,6 +33,8 @@ bot = commands.Bot(command_prefix="!", intents = nextcord.Intents.all())
 warning = ":exclamation:**WARNING: EXPERIMENTAL COMMAND**:exclamation:"
 
 max_retries = 5
+
+#quotes = {}
 
 #HELP COMMAND SETUP
 helpGuide = json.load(open("help.json"))
@@ -200,6 +203,16 @@ async def anime(ctx):
                 await ctx.send(f"Max retries reached. Command failed.")
                 break
 
+@bot.command(name="rdmmsg")
+async def rdmmsg(ctx, user: nextcord.User):
+    messages = await ctx.channel.history(limit=1000).flatten()
+    userMessages = [message for message in messages if message.author == user]
+    if userMessages:
+        randomUserMessage = random.choice(userMessages)
+        await ctx.send(f"**{user.display_name} said this:** {randomUserMessage.content}")
+    else:
+        await ctx.send(f"No messages found from {user.display_name}. Please try again later")
+
 #MEME CMDS
 @bot.command()
 async def meme(ctx):
@@ -258,6 +271,25 @@ async def ping(interaction : Interaction):
 async def say(interaction : Interaction, message:str):
     await interaction.response.send_message(f"**{interaction.user.mention} says:** {message}")
 
+#@bot.slash_command(name="quote", description="Get a quote from a user", type=6, required=True)
+#async def quote(interaction : Interaction, user: nextcord.Member):
+#    if user.id in quotes and quotes[user.id]:
+#        randomQuote = random.choice(quotes[user.id])
+#        await interaction.response.send_message(f"Quote from {interaction.user.mention}: {randomQuote}")
+#    else:
+#        await interaction.response.send_message(f"No quotes specified for {interaction.user.mention}, please try again")
+
+#@bot.slash_command(name="userinfo", description="Get information about a user", options=[nextcord.Option(name='user', description='Select a user', type=6, required=True)])
+#async def userinfo(interaction : Interaction, user: nextcord.Member):
+#    embed = nextcord.Embed(title=f"User Information for {user.display_name}", colour=user.colour)
+#    embed.add_field(name="Username", value=user.name, inline=True)
+#    embed.add_field(name="Discriminator", value=user.discriminator, inline=True)
+#    embed.add_field(name="User ID", value=user.id, inline=True)
+#    embed.add_field(name="Joined Server", value=user.joined_at.strftime('%Y-%m-%d %H:%M:%S'), inline=True)
+#    embed.add_field(name="Created Account", value=user.created_at.strftime('%Y-%m-%d %H:%M:%S'), inline=True)
+#    embed.set_thumbnail(url=user.avatar_url)
+#    await interaction.response.send_message(embed=embed)
+                                                
 @bot.slash_command(name="f1", description="Roll for your Formula 1 driver")
 async def f1(interaction : Interaction):
     f1drivers = [
@@ -267,6 +299,14 @@ async def f1(interaction : Interaction):
         '#27 | Nico HULKENBERG', '#22 | Yuki TSUNODA', '#3 | Daniel RICCIARDO', '#23 | Alex ALBON', '#2 | Logan SARGEANT'
     ]
     await interaction.response.send_message(f"Your choosen driver is: **{random.choice(f1drivers)}**", ephemeral=False)
+
+@bot.slash_command(name="f1team", description="Roll for your Formula 1 team")
+async def f1team(interaction : Interaction):
+    f1teams = [
+        'MERCEDES', 'FERRARI', 'ALPINE', 'ALPHATAURI', 'MCLAREN', 
+        'HAAS', 'WILLIAMS', 'ALFA ROMEO', 'RED BULL RACING', 'ASTON MARTIN'
+    ]
+    await interaction.response.send_message(f"Your choosen team is: **{random.choice(f1teams)}**", ephemeral=False)
 
 @bot.slash_command(name="8ball", description="Let 8Ball predict the future")
 async def ball(interaction : Interaction, question:str):
