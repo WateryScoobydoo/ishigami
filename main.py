@@ -1,4 +1,4 @@
-import nextcord, aiosqlite, time, base64, os, aiohttp, asyncio, json, urllib.request, random
+import nextcord, aiosqlite, time, base64, os, aiohttp, asyncio, json, urllib.request, random, requests
 from nextcord import Interaction, SlashOption, ChannelType, Embed, File, ButtonStyle
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
@@ -30,6 +30,8 @@ load_dotenv()
 bot = commands.Bot(command_prefix="!", intents = nextcord.Intents.all())
 
 warning = ":exclamation:**WARNING: EXPERIMENTAL COMMAND**:exclamation:"
+
+max_retries = 5
 
 #HELP COMMAND SETUP
 helpGuide = json.load(open("help.json"))
@@ -144,6 +146,7 @@ async def test(ctx):
 
 @bot.command()
 async def ihelp(ctx):
+    await ctx.send(warning)
     currentPage = 0
 
     async def next_callback(interaction):
@@ -165,6 +168,37 @@ async def ihelp(ctx):
     theView.add_item(previousButton)
     theView.add_item(nextButton)
     sentMessage = await ctx.send(embed=createHelpEmbed(pageNum=1), view=theView)
+
+@bot.command(name="anime", description="Generate a random anime")
+async def anime(ctx):
+    await ctx.send(warning)
+    retries = 0
+    while retries < max_retries:
+        try: 
+            fakeChrome = 'http://api.jikan.moe/v4/anime/' + str(random.randint(1,55555))
+            response = requests.get(fakeChrome)
+            animeData = response.json()
+            animeTitle = animeData["data"]["title"]
+            animeSynopsis = animeData["data"]['synopsis']
+            animeUrl = animeData["data"]['url']
+            animeImage = animeData["data"]['images']['jpg']['large_image_url']
+            animeScore = animeData["data"]['score']
+            animeRank = animeData["data"]['rank']
+            animePopularity = animeData["data"]['popularity']
+            animeMembers = animeData["data"]['members']
+            embed = nextcord.Embed(title=animeTitle, description=animeSynopsis, url=animeUrl, colour=0x7289da)
+            embed.set_image(url=animeImage)
+            embed.set_footer(text=f"Score: {animeScore} | Rank: {animeRank} | Members: {animeMembers} | Popularity: {animePopularity}")
+            await ctx.send(embed=embed)
+            return
+        except Exception as e:
+            #await ctx.send(f"An error has occurred: {str(e)}, please try again.")
+            retries += 1
+            if retries < max_retries:
+                await ctx.send(f"An error has occurred: {str(e)}, Retrying (Attempts: {retries}/{max_retries})")
+            else:
+                await ctx.send(f"Max retries reached. Command failed.")
+                break
 
 #MEME CMDS
 @bot.command()
