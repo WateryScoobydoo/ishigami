@@ -1,0 +1,14 @@
+{
+    "Standard Commands" : {
+        "!test" : "Default testing command",
+        "!gen" : "Generate an AI image using Craiyon",
+        "!meme" : "Generate a random MEME post from Reddit",
+        "!ihelp" : "Shows the command list available"
+    },
+    "Slash Commands" : {
+        "/test" : "Default testing slash command",
+        "/ping" : "Ping pong",
+        "/say" : "Make Ishigami say whatever you want",
+        "/f1" : "Roll your favourite Formula 1 driver"
+    }
+}

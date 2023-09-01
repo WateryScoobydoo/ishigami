@@ -1,8 +1,8 @@
 import nextcord, aiosqlite, time, base64, os, aiohttp, asyncio, json, urllib.request, random
-from nextcord import Interaction, SlashOption, ChannelType
+from nextcord import Interaction, SlashOption, ChannelType, Embed, File, ButtonStyle
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
-from craiyon import Craiyon
+from nextcord.ui import Button, View
 from PIL import Image
 from io import BytesIO
 from config import API
@@ -30,6 +30,20 @@ load_dotenv()
 bot = commands.Bot(command_prefix="!", intents = nextcord.Intents.all())
 
 warning = ":exclamation:**WARNING: EXPERIMENTAL COMMAND**:exclamation:"
+
+#HELP COMMAND SETUP
+helpGuide = json.load(open("help.json"))
+
+bot.remove_command("ihelp")
+
+def createHelpEmbed(pageNum=0, inline=False):
+    pageNum = pageNum % len(list(helpGuide))
+    pageTitle = list(helpGuide)[pageNum]
+    embed = Embed(colour=0x0080ff, title=pageTitle)
+    for key, val in helpGuide[pageTitle].items():
+        embed.add_field(name=key, value=val, inline=inline)
+        embed.set_footer(text=f"Page {pageNum+1} of {len(list(helpGuide))}")
+    return embed
 
 #AI IMAGE SETUP
 class DropDown(nextcord.ui.Select):
@@ -128,6 +142,30 @@ async def test(ctx):
     await ctx.send(warning)
     await ctx.send("Ishigami is working as intended! :white_check_mark:")
 
+@bot.command()
+async def ihelp(ctx):
+    currentPage = 0
+
+    async def next_callback(interaction):
+        nonlocal currentPage, sentMessage
+        currentPage += 1
+        await sentMessage.edit(embed=createHelpEmbed(pageNum=currentPage), view=theView)
+
+    async def previous_callback(interaction):
+        nonlocal currentPage, sentMessage
+        currentPage -=1
+        await sentMessage.edit(embed=createHelpEmbed(pageNum=currentPage), view=theView)
+    
+    nextButton = Button(label=">", style=ButtonStyle.blurple)
+    nextButton.callback = next_callback
+    previousButton = Button(label="<", style=ButtonStyle.blurple)
+    previousButton.callback = previous_callback
+
+    theView = View(timeout=180)
+    theView.add_item(previousButton)
+    theView.add_item(nextButton)
+    sentMessage = await ctx.send(embed=createHelpEmbed(pageNum=1), view=theView)
+
 #MEME CMDS
 @bot.command()
 async def meme(ctx):
@@ -192,7 +230,7 @@ async def f1(interaction : Interaction):
         '#1 | Max VERSTAPPEN', '#11 | Sergio PEREZ', '#16 | Charles LECLERC', '#55 | Carlos SAINZ', '#44 | Lewis HAMILTON', 
         '#63 | George RUSSELL', '#10 | Pierre GASLY', '#31 | Esteban OCON', '#4 | Lando NORRIS', '#81 | Oscar PIASTRI', 
         '#24 | Guanyu ZHOU', '#77 | Valtteri BOTTAS', '#14 | Fernando ALONSO', '#18 | Lance STROLL', '#20 | Kevin MAGNUSSEN', 
-        '#27 | Nico HULKENBERG', '#22 | Yuki TSUNODA', '#TBC | Nyck DE VRIES', '#23 | Alex ALBON', '#TBC | Logan SARGEANT'
+        '#27 | Nico HULKENBERG', '#22 | Yuki TSUNODA', '#3 | Daniel RICCIARDO', '#23 | Alex ALBON', '#2 | Logan SARGEANT'
     ]
     await interaction.response.send_message(f"Your choosen driver is: **{random.choice(f1drivers)}**", ephemeral=False)
 
