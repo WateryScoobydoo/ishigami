@@ -205,6 +205,7 @@ async def anime(ctx):
 
 @bot.command(name="rdmmsg")
 async def rdmmsg(ctx, user: nextcord.User):
+    await ctx.send(warning)
     messages = await ctx.channel.history(limit=1000).flatten()
     userMessages = [message for message in messages if message.author == user]
     #avatarUrl = user.avatar.url
