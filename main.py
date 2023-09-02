@@ -207,9 +207,13 @@ async def anime(ctx):
 async def rdmmsg(ctx, user: nextcord.User):
     messages = await ctx.channel.history(limit=1000).flatten()
     userMessages = [message for message in messages if message.author == user]
+    #avatarUrl = user.avatar.url
     if userMessages:
         randomUserMessage = random.choice(userMessages)
-        await ctx.send(f"**{user.display_name} said this:** {randomUserMessage.content}")
+        embed = nextcord.Embed(title=f"{user.display_name} said:", description=randomUserMessage.content, colour=0xFF0000)
+        #embed.set_image(avatarUrl)
+        embed.set_footer(text=f"Message sent at: {randomUserMessage.created_at.strftime('%d-%m-%Y %H:%M:%S')}")
+        await ctx.send(embed=embed)
     else:
         await ctx.send(f"No messages found from {user.display_name}. Please try again later")
 
