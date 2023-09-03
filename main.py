@@ -148,6 +148,16 @@ async def test(ctx):
     await ctx.send("Ishigami is working as intended! :white_check_mark:")
 
 @bot.command()
+@commands.is_owner()
+async def die(ctx):
+    await ctx.send(warning)
+    userDisplayName = ctx.author.display_name
+    shutdownDesc = (f"**{userDisplayName}#0000** Ishigami will now shutdown... ;-;")
+    embed = nextcord.Embed(description=(shutdownDesc), colour=0xFF0000)
+    await ctx.send(embed=embed)
+    await bot.close()
+
+@bot.command()
 async def ihelp(ctx):
     await ctx.send(warning)
     currentPage = 0
