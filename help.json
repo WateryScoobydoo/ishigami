@@ -1,5 +1,6 @@
 {
     "Standard Commands" : {
+        "!die" : "Kill Ishigami (BOT Owner Only)",
         "!test" : "Default testing command",
         "!gen" : "Generate an AI image using Craiyon",
         "!meme" : "Generate a random MEME post from Reddit",
