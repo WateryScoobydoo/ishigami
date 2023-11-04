@@ -3,9 +3,9 @@ from nextcord import Interaction, SlashOption, ChannelType, Embed, File, ButtonS
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
 from nextcord.ui import Button, View
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
-from config import API
+from config import API, RIOT
 from dotenv import load_dotenv
 load_dotenv()
 # py -m pip install nextcord
@@ -141,6 +141,18 @@ async def gen(ctx: commands.Context, *, prompt: str):
         image = BytesIO(base64.decodebytes(images[0].encode("utf-8")))
         return await msg.edit(content="AI Generated Images by **ISHIGAMI**", file=nextcord.File(image, "generatedImage.png"), view=DropDownView(msg, images, ctx.author.id))
 
+@bot.command()
+async def gen2(ctx, keyword: str):
+    imageGen2 = Image.new('RGB', (400, 200), color=(255, 255, 255))
+    drawGen2 = ImageDraw.Draw(imageGen2)
+    fontGen2 = ImageFont.load_default()
+    textGen2 = f"Keyword: {keyword}"
+    text_position = (20, 80)
+    text_colour = (0, 0, 0)
+    drawGen2.text(text_position, textGen2, fill=text_colour, font=fontGen2)
+    imageGen2.save("generated-image.png")
+    await ctx.send(file=nextcord.File("generated-image.png"))
+
 #COMMANDS
 @bot.command()
 async def test(ctx):
@@ -244,6 +256,34 @@ async def meme(ctx):
     embed.set_image(url=memeUrl)
     embed.set_footer(text=f"Meme by: {memeAuthor} | Subreddit: {memeSub} | Post: {memeLink}")
     await ctx.send(embed=embed)
+
+#RIOT CMDS
+@bot.command()
+async def ability(ctx, *, champion_name):
+    try:
+        championData = get_champion_data(champion_name)
+        if championData:
+            abilities = championData['data'][champion_name]['spells']
+            response = f"**Abilities of {champion_name}**:\n"
+            for ability in abilities:
+                response += f"**{ability['name']}** = {ability['description']}\n\n"
+                await ctx.send(response)
+            else:
+                await ctx.send(f"Champion not found: {champion_name}")
+    except Exception as e:
+        await ctx.send(f"An error occurred: {str(e)}")
+def get_champion_data(champion_name):
+    fakeChrome = f'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{champion_name}'
+    headers = {
+        'X-Riot-Token' : RIOT
+    }
+    response = requests.get(fakeChrome, headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+        return data['abilities']
+    else:
+        return None
+
 
 #CHAT GPT
 @bot.command()
